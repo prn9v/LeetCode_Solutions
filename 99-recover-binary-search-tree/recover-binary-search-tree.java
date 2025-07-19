@@ -14,37 +14,34 @@
  * }
  */
 class Solution {
+    private TreeNode first = null;
+    private TreeNode second = null;        
+    private TreeNode previous = null;
+    
     public void recoverTree(TreeNode root) {
-        ArrayList<TreeNode> list = new ArrayList<>();
-        inorder(root, list);
+    
+        inOrderTraverse(root);
 
-        ArrayList<TreeNode> sorted = new ArrayList<>(list);
-        sorted.sort((a, b) -> Integer.compare(a.val, b.val));
+        //swap
+        int temp = first.val;
+        first.val = second.val;
+        second.val = temp;
+    }
 
-        TreeNode first = null, second = null;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).val != sorted.get(i).val) {
-                if (first == null) {
-                    first = list.get(i);
-                } else {
-                    second = list.get(i);
-                    break;
-                }
+        private void inOrderTraverse(TreeNode node) {
+            if (node == null) {
+                return;
             }
+            //traverse left
+            inOrderTraverse(node.left);
+
+            if (previous != null && node.val < previous.val) {
+                if (first == null) { // found the first misplaced node
+                    first = previous;
+                }
+                second = node;
+            }
+            previous = node;
+            inOrderTraverse(node.right);
         }
-
-        if (first != null && second != null) {
-            int temp = first.val;
-            first.val = second.val;
-            second.val = temp;
-        }
-    }
-
-    private void inorder(TreeNode root, ArrayList<TreeNode> list) {
-        if (root == null) return;
-
-        inorder(root.left, list);
-        list.add(root);
-        inorder(root.right, list);
-    }
 }
