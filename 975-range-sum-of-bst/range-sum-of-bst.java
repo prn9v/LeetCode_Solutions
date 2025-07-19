@@ -14,20 +14,20 @@
  * }
  */
 class Solution {
-     int ans =0;
+
       public int rangeSumBST(TreeNode root, int low, int high) {
 
         if(root == null){
             return 0;
         }
 
-        rangeSumBST(root.left,low,high);
-        if(root.val >= low && root.val <= high){
-            ans += root.val;
-        }        
-        rangeSumBST(root.right,low,high);
-
-        return ans;
+        if(root.val>=low && root.val<=high){
+            return rangeSumBST(root.left,low,high)+root.val+rangeSumBST(root.right,low,high);
+        }else if(root.val<=low){
+            return rangeSumBST(root.right,low,high);
+        }else{
+            return rangeSumBST(root.left,low,high);
+        }
     }
 
 }
