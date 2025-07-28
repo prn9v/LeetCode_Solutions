@@ -1,26 +1,27 @@
 class Solution {
-    public int countMaxOrSubsets(int[] nums) {
-        int ans = 0;
-        int n = nums.length;
+    static int maxOr = 0;
+    static int count = 0;
+    
+    public int countMaxOrSubsets(int[] nums) {  
+            maxOr = 0;
+            count = 0;
 
-        for(int num:nums){
-            ans = ans | num;
+            for(int num:nums){
+                maxOr|= num;
+            }
+
+            dfs(nums, 0, 0);
+            return count;
         }
 
-        int count = 0;
-        int totalSubsets = 1 << n; 
-
-        for (int i = 0; i < totalSubsets; i++) {
-            int sum = 0;
-            for (int j = 0; j < n; j++) {
-                if ((i & (1 << j)) != 0) {
-                    sum = sum | nums[j];
+        private static  void dfs(int [] nums,int index,int currentOr){
+            if(index== nums.length){
+                if(currentOr==maxOr){
+                    count++;
                 }
+                return;
             }
-            if(sum == ans){
-                count++;
-            }
-        }
-        return count;
-    }
+            dfs(nums, index+1,currentOr|nums[index]);
+            dfs(nums,index+1, currentOr);
+        }   
 }
