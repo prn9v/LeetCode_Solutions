@@ -1,60 +1,55 @@
-class Solution {
+class SegmentTree {
+    int[] max;
 
-    int n;
-    int[] seg;
-    void Update(int p) { 
-        seg[p] = Math.max(seg[p << 1], seg[p << 1 | 1]); 
+    public SegmentTree(int[] arr) {
+        int n = arr.length;
+        this.max = new int[4 * n];
+        build(1, 0, n - 1, arr);
     }
-    void Build(int p, int l, int r, int[] baskets) {
-        if (l == r) {
-            seg[p] = baskets[l];
+
+    private void build(int node, int left, int right, int[] arr) {
+        // base case
+        if(left == right) {
+            max[node] = arr[left];
             return;
         }
-        int mid = (l + r) >> 1;
-        Build(p << 1, l, mid, baskets);
-        Build(p << 1 | 1, mid + 1, r, baskets);
-        Update(p);
+
+        int mid = left + (right - left) / 2;
+        build(2 * node, left, mid, arr);
+        build(2 * node + 1, mid + 1, right, arr);
+        update(node);
     }
-    void Assign(int x, int v, int p, int l, int r) {
-        if (x < l || x > r) {
-            return;
-        }
-        if (l == r) {
-            seg[p] = v;
-            return;
-        }
-        int mid = (l + r) >> 1;
-        Assign(x, v, p << 1, l, mid);
-        Assign(x, v, p << 1 | 1, mid + 1, r);
-        Update(p);
+
+    private void update(int node) {
+        max[node] = Math.max(max[node * 2], max[node * 2 + 1]);
     }
-    int FirstLarger(int v, int p, int l, int r) {
-        if (seg[p] < v) {
-            return r + 1;
+
+    public boolean query(int node, int left, int right, int target) {
+        // no basket available
+        if(max[node] < target) return false;
+        // base case
+        if(left == right) {
+            // found a basket
+            max[node] = -1;
+            return true;
         }
-        if (l == r) {
-            return r;
-        }
-        int mid = (l + r) >> 1;
-        int lf = FirstLarger(v, p << 1, l, mid);
-        if (lf <= mid) {
-            return lf;
-        }
-        return FirstLarger(v, p << 1 | 1, mid + 1, r);
+
+        int mid = left + (right - left) / 2;
+        boolean result = query(node * 2, left, mid, target);
+        if(!result) result = query(node * 2 + 1, mid + 1, right, target);
+        
+        update(node);
+        return result;
     }
+}
+
+class Solution {
     public int numOfUnplacedFruits(int[] fruits, int[] baskets) {
-        n = fruits.length;
-        seg = new int[4 * n + 1];
-        Build(1, 0, n - 1, baskets);
-        int res = 0;
-        for (int x : fruits) {
-            int pos = FirstLarger(x, 1, 0, n - 1);
-            if (pos == n) {
-                res++;
-            } else {
-                Assign(pos, 0, 1, 0, n - 1);
-            }
+        SegmentTree tree = new SegmentTree(baskets);
+        int result = 0;
+        for(int fruit: fruits) {
+            if(!tree.query(1, 0, baskets.length - 1, fruit)) result++;
         }
-        return res;
+        return result;
     }
 }
