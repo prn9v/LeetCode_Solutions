@@ -1,34 +1,40 @@
 class Solution {
-    public int maxCollectedFruits(int[][] grid) {
-        int n = grid.length, res = 0;
-        for (int i = 0; i < n; i++) {
-            res += grid[i][i];
-        }
-        for (int pass = 0; pass < 2; pass++) {
-            if (pass == 1) {
-                for (int i = 0; i < n; i++) {
-                    for (int j = i + 1; j < n; j++) {
-                        int tmp = grid[i][j];
-                        grid[i][j] = grid[j][i];
-                        grid[j][i] = tmp;
-                    }
+    public int maxCollectedFruits(int[][] A) {
+        int n = A.length;
+        // Set inaccessible cells to 0
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (i < j && j < n - 1 - i) {
+                    A[i][j] = 0;
+                }
+                if (j < i && i < n - 1 - j) {
+                    A[i][j] = 0;
                 }
             }
-            int[] prev = new int[n], curr = new int[n];
-            Arrays.fill(prev, -1);
-            prev[n - 1] = grid[0][n - 1];
-            for (int row = 1; row < n - 1; row++) {
-                Arrays.fill(curr, -1);
-                for (int i = 0; i < n; i++) {
-                    if (prev[i] < 0) continue;
-                    if (i > 0)  curr[i - 1] = Math.max(curr[i - 1], prev[i] + grid[row][i - 1]);
-                    if (i < n - 1) curr[i + 1] = Math.max(curr[i + 1], prev[i] + grid[row][i + 1]);
-                    curr[i] = Math.max(curr[i], prev[i] + grid[row][i]);
-                }
-                int[] tmp = prev; prev = curr; curr = tmp;
-            }
-            res += prev[n - 1];
         }
-        return res;
+
+        // First child
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            res += A[i][i];
+        }
+
+        // Second child
+        for (int i = 1; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                A[i][j] += Math.max(A[i - 1][j - 1],
+                                  Math.max(A[i - 1][j], (j + 1 < n) ? A[i - 1][j + 1] : 0));
+            }
+        }
+
+        // Third child
+        for (int j = 1; j < n; ++j) {
+            for (int i = j + 1; i < n; ++i) {
+                A[i][j] += Math.max(A[i - 1][j - 1],
+                                  Math.max(A[i][j - 1], (i + 1 < n) ? A[i + 1][j - 1] : 0));
+            }
+        }
+
+        return res + A[n - 1][n - 2] + A[n - 2][n - 1];
     }
 }
