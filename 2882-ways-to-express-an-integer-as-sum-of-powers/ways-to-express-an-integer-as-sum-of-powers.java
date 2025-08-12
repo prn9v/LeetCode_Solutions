@@ -1,37 +1,14 @@
 class Solution {
-    static final int MOD = 1_000_000_007;
-    
+
     public int numberOfWays(int n, int x) {
-        List<Integer> powersList = new ArrayList<>();
-        int base = 1;
-        while (true) {
-            long val = (long) Math.pow(base, x);
-            if (val > n) break;
-            powersList.add((int) val);
-            base++;
-        }
-
-        int m = powersList.size();
-        int[] powers = new int[m];
-        for (int i = 0; i < m; i++) powers[i] = powersList.get(i);
-
-        // Step 2: DP table [m+1][n+1]
-        int[][] dp = new int[m + 1][n + 1];
-
-        for (int i = 0; i <= m; i++) {
-            dp[i][0] = 1;
-        }
-
-        // Step 3: Fill table backwards over index
-        for (int idx = m - 1; idx >= 0; idx--) {
-            for (int target = 1; target <= n; target++) {
-                dp[idx][target] = dp[idx + 1][target];
-                if (target >= powers[idx]) {
-                    dp[idx][target] = (dp[idx][target] + dp[idx + 1][target - powers[idx]]) % MOD;
-                }
+       long[] dp = new long[n+1];
+        dp[0] = 1;
+        for (int i = 1; Math.pow(i,x) <= n; i++) {
+            int num = (int)Math.pow(i,x);
+            for (int s = n; s >= num; s--) {
+                dp[s] += dp[s - num];
             }
         }
-
-        return dp[0][n];
+        return (int) (dp[n] % 1_000_000_007);
     }
 }
