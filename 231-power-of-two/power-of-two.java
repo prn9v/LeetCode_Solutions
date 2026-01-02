@@ -3,9 +3,15 @@ class Solution {
         if(n == 0){
             return false;
         }
-        if(n == Integer.MIN_VALUE){
+
+        if(n == 1){
+            return true;
+        }
+
+        if(n % 2 == 0){
+            return isPowerOfTwo(n/2);
+        } else {
             return false;
         }
-        return (n & (n-1)) == 0;
     }
 }
