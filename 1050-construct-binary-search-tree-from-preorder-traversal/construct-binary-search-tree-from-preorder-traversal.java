@@ -14,29 +14,17 @@
  * }
  */
 class Solution {
-    public TreeNode bstFromPreorder(int[] preorder) {
-        List<Integer> list = new ArrayList<>();
-        for (int x : preorder) list.add(x);
-        return helper(list);
+    private int idx = 0;
+
+    private TreeNode dfd(int[] preorder, int lowBound, int highBound) {
+        if (idx == preorder.length || preorder[idx] <= lowBound || preorder[idx] >= highBound) return null;
+        TreeNode root = new TreeNode(preorder[idx++]);
+        root.left = dfd(preorder, lowBound, root.val);
+        root.right = dfd(preorder, root.val, highBound);
+        return root;
     }
 
-    private TreeNode helper(List<Integer> list) {
-        if (list.isEmpty()) return null;
-
-        TreeNode root = new TreeNode(list.get(0));
-
-        List<Integer> leftList = new ArrayList<>();
-        List<Integer> rightList = new ArrayList<>();
-
-        // start from 1 so root is not included again
-        for (int i = 1; i < list.size(); i++) {
-            if (list.get(i) < root.val) leftList.add(list.get(i));
-            else rightList.add(list.get(i));
-        }
-
-        root.left = helper(leftList);
-        root.right = helper(rightList);
-
-        return root;
+    public TreeNode bstFromPreorder(int[] preorder) {
+        return dfd(preorder, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 }
