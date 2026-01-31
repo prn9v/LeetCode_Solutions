@@ -10,10 +10,6 @@ class Solution {
 
          ans.add(new ArrayList<>(list));
 
-        if (!ans.contains(list)) {
-            ans.add(new ArrayList<>(list));
-        }
-
         for (int i = index; i < nums.length; i++) {
             if (i > index && nums[i] == nums[i-1]) continue;
             
