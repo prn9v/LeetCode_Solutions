@@ -1,31 +1,37 @@
 class Solution {
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
-        List<List<Integer>> ans = new ArrayList<>();
-        List<Integer> list = new ArrayList<>();
-        Arrays.sort(candidates);
-        helper(ans, list, candidates, target, 0, 0);
-        return ans;
+        List<List<Integer>> res = new ArrayList<>();
+        int[] newCandidates = new int[target+1];
+        for(int candidate : candidates) {
+            if(candidate <= target) {
+                newCandidates[candidate]++;
+            }
+        }
+
+        backtrack(res, newCandidates, target, new ArrayList<>(), 0);
+        return res;
     }
 
-    private void helper(List<List<Integer>> ans, List<Integer> list, int[] candidates, int target, int sum, int start) {
-        if (sum == target) {
-            ans.add(new ArrayList<>(list));
+    private void backtrack(List<List<Integer>> res, int[] candidates, int target, List<Integer> arr, int index) {
+        if(target == 0) {
+            res.add(new ArrayList<>(arr));
             return;
         }
 
-        if (sum > target) {
+        if(target < 0){
             return;
         }
 
-        for (int i = start; i < candidates.length; i++) {
-            if(i > start && candidates[i] == candidates[i-1]) continue;
-            if (candidates[i] > target - sum) {
+        for(int i = index; i <= target; i++) {
+            if(candidates[i] == 0) {
                 continue;
             }
 
-            list.add(candidates[i]);
-            helper(ans, list, candidates, target, sum + candidates[i], i+1);
-            list.remove(list.size() - 1);
+            candidates[i]--;
+            arr.add(i);
+            backtrack(res, candidates, target-i, arr, i);
+            arr.remove(arr.size()-1);
+            candidates[i]++;
         }
     }
-}   
+}
