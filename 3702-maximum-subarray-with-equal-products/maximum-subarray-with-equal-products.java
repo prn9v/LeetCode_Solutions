@@ -1,50 +1,35 @@
 
 class Solution {
     public int maxLength(int[] nums) {
-        int ans = 0;
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i + 1; j < nums.length; j++) {
-                if (prod(nums, i, j)) {
-                    ans = Math.max(ans, j - i + 1);
+        int n = nums.length;
+        int maxLen = 1;
+        
+        for (int i = 0; i < n; i++) {
+            long prod = 1;
+            int gcdVal = nums[i];
+            int lcmVal = nums[i];
+            
+            for (int j = i; j < n; j++) {
+                prod *= nums[j];
+                gcdVal = gcd(gcdVal, nums[j]);
+                lcmVal = lcm(lcmVal, nums[j]);
+                
+                if (prod == (long) gcdVal * lcmVal) {
+                    maxLen = Math.max(maxLen, j - i + 1);
                 }
             }
         }
-
-        return ans;
+        
+        return maxLen;
     }
 
-    private boolean prod(int[] nums, int start, int end) {
-
-        long product = 1;
-        long g = nums[start];
-        long l = nums[start];
-
-        for (int i = start; i <= end; i++) {
-
-            product *= nums[i];
-
-            g = gcd(g, nums[i]);
-
-            l = lcm(l, nums[i]);
-
-            if (product > l * g)
-                return false;
-        }
-
-        return product == l * g;
+    private int gcd(int a, int b) {
+        if (b == 0) return a;
+        return gcd(b, a % b);
     }
 
-    private long gcd(long a, long b) {
-        while (b != 0) {
-            long t = b;
-            b = a % b;
-            a = t;
-        }
-        return a;
-    }
-
-    private long lcm(long a, long b) {
-        return (a / gcd(a, b)) * b;
+    private int lcm(int a, int b) {
+        return a / gcd(a, b) * b;
     }
 
 }
