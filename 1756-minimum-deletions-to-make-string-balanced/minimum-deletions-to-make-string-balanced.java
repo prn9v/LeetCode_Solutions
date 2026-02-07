@@ -1,42 +1,15 @@
 class Solution {
     public int minimumDeletions(String s) {
-        int aCount = 0;
-        int bCount = 0;
-        int min = Integer.MAX_VALUE;
-        int minIdx = -1;
-        int ans = 0;
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == 'a') {
-                aCount++;
-            }
-        }
+        int bCount = 0;  
+        int deletions = 0;
 
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == 'b') {
-                bCount += 1;
+        for (char c : s.toCharArray()) {
+            if (c == 'b') {
+                bCount++;
             } else {
-                aCount -= 1;
-            }
-
-            if(min > aCount + bCount){
-                min = aCount+bCount;
-                minIdx = i;
+                deletions = Math.min(deletions + 1, bCount);
             }
         }
-
-        for (int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
-            if (i < minIdx) {
-                if (ch == 'b') {
-                    ans++;
-                }
-            }else if (i > minIdx) {
-                if (ch == 'a') {
-                    ans++;
-                }
-            }
-        }
-
-        return ans;
+        return deletions;
     }
 }
