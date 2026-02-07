@@ -9,24 +9,18 @@ class Solution {
     }
 
     private void helper(List<String> ans, String s, int index, int segments, StringBuilder path) {
-
-        // ✅ SUCCESS condition
         if (segments == 4 && index == s.length()) {
             ans.add(path.toString());
             return;
         }
 
-        // ❌ INVALID conditions
         if (segments == 4 || index == s.length()) {
             return;
         }
 
         int len = path.length();
 
-        // Try segment lengths: 1 to 3
         for (int i = index; i < Math.min(index + 3, s.length()); i++) {
-
-            // Leading zero check
             if (s.charAt(index) == '0' && i > index) break;
 
             int val = Integer.parseInt(s.substring(index, i + 1));
@@ -37,7 +31,6 @@ class Solution {
 
             helper(ans, s, i + 1, segments + 1, path);
 
-            // Backtrack
             path.setLength(len);
         }
     }
