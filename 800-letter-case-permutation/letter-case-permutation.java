@@ -23,7 +23,6 @@ class Solution {
             sb.setCharAt(index, Character.toUpperCase(original));
             helper(sb, ans, index + 1);
 
-            sb.setCharAt(index, original);
         }
     }
 }
