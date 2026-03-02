@@ -3,6 +3,7 @@ class Solution {
         int[] ans = new int[s.length()+1];
         int low = 0;
         int high = s.length();
+        int n=s.length();
 
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == 'I') {
@@ -11,7 +12,7 @@ class Solution {
                 ans[i] = high--;
             }
 
-            ans[ans.length-1] = low;
+            ans[n] = low;
         }
 
         return ans;
