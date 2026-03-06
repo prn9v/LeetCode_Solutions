@@ -1,77 +1,32 @@
 class TextEditor {
-    private Stack<Character> left;
-    private Stack<Character> right;
+    public StringBuilder prefix;
+    public Stack<Character> suffix;
 
     public TextEditor() {
-        left = new Stack<>();
-        right = new Stack<>();
+        prefix = new StringBuilder();
+        suffix = new Stack();
     }
-
+    
     public void addText(String text) {
-        char[] add = text.toCharArray();
-        for (int i = 0; i < add.length; i++) {
-            left.push(add[i]);
-        }
+        prefix.append(text);
     }
-
+    
     public int deleteText(int k) {
-        int n = Math.min(k, left.size());
-        int deleted = n;
-        while (n > 0) {
-            left.pop();
-            n--;
-        }
-        return deleted;
+        if (k > prefix.length()) k = prefix.length();
+        prefix.setLength(prefix.length() - k);
+        return k;
     }
-
+    
     public String cursorLeft(int k) {
-        int move = Math.min(k, left.size());
-
-        while (move > 0) {
-            right.push(left.pop());
-            move--;
-        }
-
-        return last10();
+        if (k > prefix.length()) k = prefix.length();
+        for (int i = 0; i < k; i ++) suffix.push(prefix.charAt(prefix.length() - 1 - i));
+        prefix.setLength(prefix.length() - k);
+        return prefix.length() >= 10 ? prefix.substring(prefix.length() - 10, prefix.length()) : prefix.toString();
     }
-
+    
     public String cursorRight(int k) {
-        int move = Math.min(k, right.size());
-
-        while (move > 0) {
-            left.push(right.pop());
-            move--;
-        }
-
-        return last10();
-    }
-
-    private String last10() {
-        StringBuilder sb = new StringBuilder();
-        Stack<Character> temp = new Stack<>();
-
-        int count = Math.min(10, left.size());
-
-        for (int i = 0; i < count; i++) {
-            char c = left.pop();
-            temp.push(c);
-        }
-
-        while (!temp.isEmpty()) {
-            char c = temp.pop();
-            sb.append(c);
-            left.push(c);
-        }
-
-        return sb.toString();
+        if (k > suffix.size()) k = suffix.size();
+        for (int i = 0; i < k; i ++) prefix.append(suffix.pop());
+        return prefix.length() >= 10 ? prefix.substring(prefix.length() - 10, prefix.length()) : prefix.toString();
     }
 }
-
-/**
- * Your TextEditor object will be instantiated and called as such:
- * TextEditor obj = new TextEditor();
- * obj.addText(text);
- * int param_2 = obj.deleteText(k);
- * String param_3 = obj.cursorLeft(k);
- * String param_4 = obj.cursorRight(k);
- */
