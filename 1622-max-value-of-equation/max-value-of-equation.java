@@ -1,25 +1,31 @@
+import java.util.PriorityQueue;
+
 class Solution {
     public int findMaxValueOfEquation(int[][] points, int k) {
-        PriorityQueue<int[]> pq = new PriorityQueue<>(
-                (a, b) -> b[0] - a[0]);
 
-        int[][] dp = new int[points.length][2];
+        // max heap based on (yi - xi)
+        PriorityQueue<int[]> pq = new PriorityQueue<>(
+            (a, b) -> b[0] - a[0]
+        );
+
         int ans = Integer.MIN_VALUE;
 
-        for (int i = 0; i < points.length; i++) {
-            dp[i][0] = points[i][1] - points[i][0];
-            dp[i][1] = points[i][0];
+        for (int[] p : points) {
+            int x = p[0];
+            int y = p[1];
 
-            while (!pq.isEmpty() && dp[i][1] - pq.peek()[1] > k) {
+            // remove points outside window
+            while (!pq.isEmpty() && x - pq.peek()[1] > k) {
                 pq.poll();
             }
 
+            // compute equation
             if (!pq.isEmpty()) {
-                int val = pq.peek()[0] + points[i][0] + points[i][1];
-                ans = Math.max(ans, val);
+                ans = Math.max(ans, pq.peek()[0] + x + y);
             }
-            
-            pq.offer(dp[i]);
+
+            // push current point
+            pq.offer(new int[]{y - x, x});
         }
 
         return ans;
