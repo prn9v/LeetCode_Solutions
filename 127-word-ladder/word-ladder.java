@@ -34,7 +34,7 @@ class Solution {
                         if (newWord.equals(endWord))
                             return length + 1;
 
-                        if (wordSet.contains(newWord)) {
+                        if (c != original && wordSet.contains(newWord)) {
                             q.offer(newWord);
                             wordSet.remove(newWord);
                         }
