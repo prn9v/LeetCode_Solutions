@@ -1,31 +1,20 @@
 class Solution {
     public List<List<Integer>> generate(int numRows) {
-        int[][] dp = new int[numRows][numRows];
-        List<List<Integer>> ans = new ArrayList<>();
+       List<List<Integer>> ans = new ArrayList<>();
+       ans.add(new ArrayList<>(Arrays.asList(1)));
 
-        for(int i = 0; i < numRows; i++){
-            dp[0][i] = 1;
-            dp[i][0] = 1;
-        }
-
-        for(int i = 1; i < numRows; i++){
-            for(int j  = 1; j < numRows; j++){
-                dp[i][j] = dp[i][j-1] + dp[i-1][j];
+       for (int i = 1; i < numRows; i++) {
+            List<Integer> temp = new ArrayList<>();
+            for (int j = 0; j <= i; j++) {
+                if (j == 0 || j == i) {
+                    temp.add(1);
+                } else {
+                    temp.add(ans.get(i-1).get(j-1) + ans.get(i-1).get(j));
+                }
             }
-        }
+            ans.add(temp);
+       }
 
-        for(int i = 0; i < numRows; i++){
-            List<Integer> list = new ArrayList<Integer>();
-            int k = i;
-            int m = 0;
-            for(int j  = 0; j <= i; j++){
-                list.add(dp[k][m]);
-                k--;
-                m++;
-            }
-            ans.add(list);
-        }
-
-        return ans;
+       return ans;
     }
 }
