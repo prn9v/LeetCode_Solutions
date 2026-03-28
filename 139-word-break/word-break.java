@@ -21,7 +21,7 @@ class Solution {
             String sub = s.substring(idx,i);
             if(set.contains(sub)) {
                 if(helper(dp, i,s,set)) {
-                    return true;
+                    return dp[idx] = true;
                 }
             }
         }
