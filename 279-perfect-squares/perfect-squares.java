@@ -1,31 +1,13 @@
 class Solution {
     public int numSquares(int n) {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        return helper(map, n, 0);
-    }
-
-    private int helper(HashMap<Integer, Integer> map, int n, int sum) {
-        if (sum == n) {
-            return 0;
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j * j <= i; j++) {
+                dp[i] = Math.min(dp[i], 1 + dp[i - j * j]);
+            }
         }
-
-        if (map.containsKey(sum)) {
-            return map.get(sum);
-        }
-
-        if (sum > n) {
-            return Integer.MAX_VALUE;
-        }
-
-        int min = Integer.MAX_VALUE;
-
-        for (int i = 1; i * i <= n - sum; i++) {
-            sum += i * i;
-            min = Math.min(min, 1 + helper(map, n, sum));
-            sum -= i * i;
-        }
-
-        map.put(sum, min);
-        return map.get(sum);
+        return dp[n];
     }
 }
