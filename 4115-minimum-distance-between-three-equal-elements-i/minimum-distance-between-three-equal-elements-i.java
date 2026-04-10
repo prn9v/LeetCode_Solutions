@@ -9,6 +9,7 @@ class Solution {
                     if(nums[i] == nums[j] && nums[j] == nums[k]){
                         int d = Math.abs(i-j) + Math.abs(j - k) + Math.abs(k - i);
                         min = Integer.min(min,d);
+                        break;
                     }
                 }
             }
