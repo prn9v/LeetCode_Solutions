@@ -1,51 +1,37 @@
 class Solution {
+    public char[][] rotateTheBox(char[][] boxGrid) {
+        int m = boxGrid.length;
+        int n = boxGrid[0].length;
 
-    public char[][] rotateTheBox(char[][] box) {
-        int m = box.length;
-        int n = box[0].length;
-        char[][] result = new char[n][m];
+        // Move objects based on 90 degree roatation
+        for (int i = m-1; i >= 0; i--) {
+            int pointerY = n-1;
+            for (int j = n-1; j >= 0; j--) {
+                if (boxGrid[i][j] == '.')
+                    continue;
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                result[i][j] = box[j][i];
-            }
-        }
-
-        for (int i = 0; i < n; i++) {
-            reverse(result[i]);
-        }
-
-        for (int j = 0; j < m; j++) {
-            for (int i = n - 1; i >= 0; i--) {
-                if (result[i][j] == '.') { 
-                    int nextRowWithStone = -1;
-                    for (int k = i - 1; k >= 0; k--) {
-                        if (result[k][j] == '*') break; 
-                        if (result[k][j] == '#') { 
-                            nextRowWithStone = k;
-                            break;
-                        }
-                    }
-
-                    if (nextRowWithStone != -1) {
-                        result[nextRowWithStone][j] = '.';
-                        result[i][j] = '#';
-                    }
+                if (boxGrid[i][j] == '*') {
+                    pointerY = j - 1;
+                    continue;
                 }
+
+                // If j and pointerY are same, that means no movement required
+                if (j != pointerY) {
+                    boxGrid[i][pointerY] = '#';
+                    boxGrid[i][j] = '.';
+                }
+                pointerY--;
             }
         }
-        return result;
-    }
-    
-    private void reverse(char[] row) {
-        int left = 0;
-        int right = row.length - 1;
-        while (left < right) {
-            char temp = row[left];
-            row[left] = row[right];
-            row[right] = temp;
-            left++;
-            right--;
+
+        char[][] result = new char[n][m];
+        // Rotate 90
+        for (int j = 0; j < n; j++) {
+            for (int i = m-1; i >= 0; i--) {
+                result[j][m-1-i] = boxGrid[i][j];
+            }
         }
+
+        return result;
     }
 }
