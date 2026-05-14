@@ -1,16 +1,18 @@
 class Solution {
     public boolean isGood(int[] nums) {
-        Arrays.sort(nums);
-        for(int i = 0; i < nums.length-1; i++){
-            if(nums[i] != i+1) {
-                return false;
-            }
+        int[] freq = new int[201];
+
+        int n = 0;
+
+        for (int num : nums) {
+            freq[num]++;
+            n = Math.max(n, num);
         }
 
-        if(nums[nums.length-1] != nums.length-1) {
-            return false;
+        for (int i = 1; i < n; i++) {
+            if (freq[i] != 1) return false;
         }
 
-        return true;
+        return freq[n] == 2;
     }
 }
