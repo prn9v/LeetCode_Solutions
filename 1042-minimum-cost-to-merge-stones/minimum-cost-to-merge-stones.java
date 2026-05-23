@@ -1,82 +1,43 @@
 class Solution {
-
-    private int[][][] dp;
-    private int[] prefix;
-    private int K;
-    private static final int INF = (int)1e9;
-
+    int n;
+    int[][] dp;
     public int mergeStones(int[] stones, int k) {
-
-        int n = stones.length;
-        if ((n - 1) % (k - 1) != 0) {
+        n = stones.length;
+        if((n-1) % (k-1) != 0){
             return -1;
         }
 
-        this.K = k;
-        dp = new int[n][n][k + 1];
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                for (int p = 0; p <= k; p++) {
-                    dp[i][j][p] = -1;
-                }
-            }
-        }
-        prefix = new int[n + 1];
-
-        for (int i = 0; i < n; i++) {
-            prefix[i + 1] = prefix[i] + stones[i];
+        int[] pre = new int[n];
+        pre[0] = stones[0];
+        for(int i = 1; i<n; i++){
+            pre[i] = pre[i-1]+stones[i];
         }
 
-        return dfs(0, n - 1, 1);
+        dp = new int[n][n];
+        for(int[] a : dp){
+            Arrays.fill(a,-1);
+        }
+        return helper(stones,k,0,n-1, pre);
     }
-
-    private int dfs(int i, int j, int piles) {
-
-        int len = j - i + 1;
-
-        if ((len - piles) % (K - 1) != 0) {
-            return INF;
+    public int helper(int[] stones, int k, int i, int j, int[] pre){
+        if(i == j){
+            return 0;
         }
 
-        if (i == j) {
-            return piles == 1 ? 0 : INF;
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        } 
+
+        int ans = Integer.MAX_VALUE;
+        for(int a = i; a<j; a+=(k-1)){
+            int left = helper(stones,k,i,a,pre);
+            int right = helper(stones,k,a+1,j,pre);
+            ans = Math.min(ans,left+right);
         }
 
-        if (dp[i][j][piles] != -1) {
-            return dp[i][j][piles];
+        if((j-i) % (k-1) == 0){
+            ans += pre[j]-(i == 0 ? 0 : pre[i-1]);
         }
-
-        int ans = INF;
-
-        if (piles == 1) {
-
-            int costToMakeKpiles = dfs(i, j, K);
-
-            if (costToMakeKpiles == INF) {
-                return dp[i][j][piles] = INF;
-            }
-
-            int totalSum = rangeSum(i, j);
-
-            ans = costToMakeKpiles + totalSum;
-        }
-        else {
-
-            for (int mid = i; mid < j; mid += (K - 1)) {
-
-                int leftCost = dfs(i, mid, 1);
-
-                int rightCost = dfs(mid + 1, j, piles - 1);
-
-                ans = Math.min(ans, leftCost + rightCost);
-            }
-        }
-
-        return dp[i][j][piles] = ans;
-    }
-    
-    private int rangeSum(int i, int j) {
-        return prefix[j + 1] - prefix[i];
+        return dp[i][j] = ans;
     }
 }
