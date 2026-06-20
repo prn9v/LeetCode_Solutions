@@ -14,22 +14,18 @@ class Solution {
             return head;
         }
 
-        ListNode dummy = new ListNode();
-        dummy.next = head.next;
-        ListNode curr = head;
-        ListNode nextNode = head.next;
-        ListNode prev = new ListNode(0);
+        ListNode dummy = new ListNode(0,head);
+        ListNode prev = dummy;
 
-        while(curr != null && nextNode != null) {
-            ListNode temp = nextNode.next;
-            nextNode.next = curr;
-            curr.next = temp;
-            prev.next = nextNode;
-            prev = curr;
-            curr = temp;
-            if(curr != null){
-                nextNode = curr.next;
-            }
+        while(prev.next != null && prev.next.next != null) {
+            ListNode first = prev.next;
+            ListNode second = first.next;
+
+            first.next = second.next;
+            second.next = first;
+            prev.next = second;
+
+            prev = first;
         }
 
         return dummy.next;
