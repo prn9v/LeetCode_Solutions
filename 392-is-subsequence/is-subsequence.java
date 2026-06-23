@@ -8,21 +8,19 @@ class Solution {
             return false;
         }
         
-        int idx = 0;
+        int i = 0;
+        int j = 0;
 
-        for(int i = 0; i < t.length(); i++){
-            if(idx == s.length()){
+        while(i < s.length() && j < t.length()){
+            if(s.charAt(i) == t.charAt(j)){
+                i++;
+            }
+            if(i == s.length()) {
                 return true;
             }
-            if(t.charAt(i) == s.charAt(idx)) {
-                idx++;
-            }
+            j++;
         }
 
-        if(idx == s.length()){
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 }
