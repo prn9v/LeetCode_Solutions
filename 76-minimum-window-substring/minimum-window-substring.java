@@ -35,7 +35,7 @@ class Solution {
                 if (map.containsKey(left)) {
                     map.put(left, map.get(left) + 1);
 
-                    if (map.get(left) > 0)
+                    if (map.get(left) == 1)
                         dwords++;
                 }
 
