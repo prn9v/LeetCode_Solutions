@@ -4,17 +4,18 @@ class Solution {
             return nums[0];
         }
 
-        int ans = Integer.MIN_VALUE;
-        int sum = 0;
-        for(int i = 0; i < nums.length; i++) {
-            if(sum < 0 && nums[i] > sum) {
-                sum = 0;
+        int max = Integer.MIN_VALUE;
+        int sum = nums[0];
+        max = Math.max(max,sum);
+        for(int i = 1; i < nums.length; i++) {
+            if(nums[i] > sum + nums[i]) {
+                sum = nums[i];
+            } else {
+                sum += nums[i];
             }
-
-            sum += nums[i];
-            ans = Math.max(ans,sum); 
+            max = Math.max(max,sum);
         }
 
-        return ans;
+        return max;
     }
 }
