@@ -14,24 +14,38 @@ class Solution {
             return head;
         }
 
-        List<Integer> list = new ArrayList<>();
+       ListNode mid = FindMid(head);
+       ListNode midNext = mid.next;
+       mid.next = null;
 
-        ListNode curr = head;
+       ListNode left = sortList(head);
+       ListNode right = sortList(midNext);
 
-        while(curr != null){
-            list.add(curr.val);
-            curr = curr.next;
+       return merge(left,right);
+    }
+
+
+    ListNode FindMid(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = slow.next;
+        
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
         }
+        return slow;
+    }
 
-        Collections.sort(list);
-        ListNode dummy = new ListNode();
-        ListNode curr2 = dummy;
+    private ListNode merge(ListNode left,ListNode right) {
+        if(left == null) return right;
+        if(right == null) return left;
 
-        while(!list.isEmpty()){
-            curr2.next = new ListNode(list.remove(0));
-            curr2 = curr2.next;
+        if(left.val < right.val) {
+            left.next = merge(left.next,right);
+            return left;
+        } else {
+            right.next = merge(left,right.next);
+            return right;
         }
-
-        return dummy.next;
     }
 }
