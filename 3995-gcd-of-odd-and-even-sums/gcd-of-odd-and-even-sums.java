@@ -1,12 +1,13 @@
 class Solution {
     public int gcdOfOddEvenSums(int num) {
-        int n = num * 2;
-        int ts = (n * (n+1))/2;
+        // int n = num * 2;
+        // int ts = (n * (n+1))/2;
 
-        int sumOdd = (ts - num)/2;
-        int sumEven = ts - sumOdd;
+        // int sumOdd = (ts - num)/2;
+        // int sumEven = ts - sumOdd;
 
-        return gcd(sumOdd,sumEven);
+        // return gcd(sumOdd,sumEven);
+        return num;
     }
 
     private int gcd(int x, int y) {
