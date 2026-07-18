@@ -25,19 +25,16 @@ class Solution {
 
         char ch = str.charAt(idx);
 
-        // option 1: replace a charcter
         int replace = 0;
         str.setCharAt(idx, word2.charAt(idx));
         replace = 1 + helper(map, idx+1, str, word2);
         str.setCharAt(idx, ch);
 
-        // option 2: delete a character
         int delete = 0;
         str.deleteCharAt(idx);
         delete = 1 + helper(map, idx, str, word2);
         str.insert(idx, ch);
 
-        // option 3: insert a character
         int insert = 0;
         str.insert(idx, word2.charAt(idx));
         insert = 1 + helper(map,idx+1, str, word2);
@@ -46,6 +43,6 @@ class Solution {
         int val = Math.min(replace, Math.min(delete, insert));
 
         map.put(str.toString() + "#" + word2.substring(0, idx + 1), val);
-        return map.get(str.toString() + "#" + word2.substring(0, idx + 1));
+        return val;
     }
 }
