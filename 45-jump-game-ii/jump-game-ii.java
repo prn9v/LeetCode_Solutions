@@ -1,24 +1,36 @@
 class Solution {
     public int jump(int[] nums) {
-        int jumps = 0;
-        int start = 0;
-        int end = 0;
-        while (end < nums.length - 1) { // while end reaching the last index
-            int farthest = farthest(nums, start, end); // curent start and end's farthest index
-            start = end + 1; // then the start becomes the end + 1 because next element of end is the minimum range
-            end = farthest; // end becomes the farthest
-            jumps++;
+        if(nums.length == 1){
+            return 0;
         }
 
-        return jumps;
-    }
+        Queue<Integer> queue = new ArrayDeque<>();
+        boolean[] vis = new boolean[nums.length];
+        int count = 0;
+        queue.add(0);
+        vis[0] = true;
 
-    private int farthest(int[] nums, int start, int end) {
-        int farthest = 0;
-        for (int i = start; i <= end; i++) {
-            farthest = Math.max(farthest, i + nums[i]);
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+
+            while (size-- > 0) {
+
+                int idx = queue.poll();
+
+                if (idx == nums.length - 1)
+                    return count;
+
+                for (int j = 1; j <= nums[idx] && idx + j < nums.length; j++) {
+                    if (!vis[idx + j]) {
+                        vis[idx + j] = true;
+                        queue.offer(idx + j);
+                    }
+                }
+            }
+
+            count++;
         }
 
-        return farthest;
+        return -1;
     }
 }
