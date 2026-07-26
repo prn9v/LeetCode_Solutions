@@ -23,20 +23,17 @@ class Node {
 
 class Solution {
     public Node connect(Node root) {
-        if (root == null) {
+        if(root == null) {
             return null;
         }
 
-        if (root.left != null) {
-            if (root.right != null) {
-                root.left.next = root.right;
-            } else {
-                root.left.next = getNextChild(root.next);
-            }
-        }
-
-        if (root.right != null) {
-            root.right.next = getNextChild(root.next);
+        if(root.right != null && root.left != null) {
+            root.left.next = root.right;
+            root.right.next = next(root.next);
+        } else if(root.left != null) {
+            root.left.next = next(root.next);
+        } else if(root.right != null ){
+            root.right.next = next(root.next);
         }
 
         connect(root.right);
@@ -45,16 +42,17 @@ class Solution {
         return root;
     }
 
-    private Node getNextChild(Node node) {
-        while (node != null) {
-            if (node.left != null) {
-                return node.left;
-            }
-            if (node.right != null) {
-                return node.right;
-            }
-            node = node.next;
+    private Node next(Node root) {
+        while (root != null) {
+            if (root.left != null)
+                return root.left;
+
+            if (root.right != null)
+                return root.right;
+
+            root = root.next;
         }
+
         return null;
     }
 }
